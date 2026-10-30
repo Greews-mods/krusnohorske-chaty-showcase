@@ -158,14 +158,25 @@ function bindHome() {
     button.classList.add('active');
     renderCards(button.dataset.filter);
   }));
-  const toggle = document.querySelector('.menu-toggle');
-  const nav = document.querySelector('.main-nav');
-  toggle?.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(open));
-  });
-  nav?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => nav.classList.remove('open')));
 }
+
+document.addEventListener('click', event => {
+  const toggle = event.target.closest('.menu-toggle');
+  const nav = document.querySelector('.main-nav');
+  const menuButton = document.querySelector('.menu-toggle');
+  if (!nav || !menuButton) return;
+  if (toggle) {
+    const open = nav.classList.toggle('open');
+    menuButton.setAttribute('aria-expanded', String(open));
+    menuButton.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu');
+    return;
+  }
+  if (event.target.closest('.main-nav a')) {
+    nav.classList.remove('open');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-label', 'Otevřít menu');
+  }
+});
 
 function prepareReveals() {
   const revealNodes = document.querySelectorAll('#app .intro, #app .places, #app .quote-band, #app .camp-feature, #app .camera-section, #app .closing-cta, #app .detail-body, #app .detail-gallery, #app .nearby-section, #app .location-section');
